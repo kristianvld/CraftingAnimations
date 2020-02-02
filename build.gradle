@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'kr.entree.spigradle' version '1.0.6'
+}
+
+/*
+ * Gets the version name from the latest Git tag
+ * https://ryanharter.com/blog/2013/07/30/automatic-versioning-with-git-and-gradle/
+ */
+def getVersionName = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'describe', '--tags'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
+group 'io.github.kristianvld.crafting-animations'
+jar.archiveName 'crafting-animations.jar'
+version getVersionName()
+
+sourceCompatibility = 1.8
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src"]
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.jetbrains:annotations:16.0.2'
+    compileOnly bukkit()
+}
+
+spigot {
+    name = 'CraftingAnimations'
+    description = 'Animates certain actions like putting items in and out of chests'
+    authors = ['kristianvld']
+    apiVersion = '1.15'
+    website = 'github.com/kristianvld/CraftingAnimations'
+}
