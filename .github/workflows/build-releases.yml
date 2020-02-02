@@ -16,6 +16,7 @@ jobs:
         uses: actions/checkout@master
       - name: Gralde build
         uses: MrRamych/gradle-actions/openjdk-11@3.1
+      - name: Extract version to env
         run: bash -c "echo ::set-env name=prerelease::$(git describe --tags)"
       - name: Create Release
         id: create_release
