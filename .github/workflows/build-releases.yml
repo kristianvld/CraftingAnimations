@@ -12,25 +12,26 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
       - name: Init checkout
         uses: actions/checkout@v2
       - name: Checkout code with tags
         run: git fetch --prune --unshallow --tags
-      - name: Install tools
-        run: |
-          sudo apt update
-          sudo apt install openjdk-11-jre git
-      - name: Gradle build
-        run: ./gradlew build
       - name: Extract version to env
         run: bash -c "echo ::set-env name=prerelease::$(git describe --tags)"
+      - name: Gradle build
+        uses: eskatos/gradle-command-action@v1
+          with:
+            arguments: build
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.version }}
+          tag_name: ${{ github.ref }}
           release_name: Release ${{ env.version }}
           draft: false
           prerelease: ${{ !contains(env.version, '-') }}
