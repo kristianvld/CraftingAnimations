@@ -9,13 +9,17 @@ on:
 name: create compiled, downloadable releases
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@master
-      - name: Gralde build
-        uses: MrRamych/gradle-actions/openjdk-11@3.1
+      - uses: actions/setup-java@v1
+          with:
+            java-version: 11
+      - uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: build
       - name: Extract version to env
         run: bash -c "echo ::set-env name=prerelease::$(git describe --tags)"
       - name: Create Release
