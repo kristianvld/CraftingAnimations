@@ -14,12 +14,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@master
-      - uses: actions/setup-java@v1
-        with:
-          java-version: 11
-      - uses: eskatos/gradle-command-action@v1
-        with:
-          arguments: build
+      - name: Install tools
+        run: |
+          - sudo apt update
+          - sudo apt install openjdk-11-jre git
+      - name: Gradle build
+        run: ./gradlew build
       - name: Extract version to env
         run: bash -c "echo ::set-env name=prerelease::$(git describe --tags)"
       - name: Create Release
