@@ -23,8 +23,8 @@ jobs:
         run: bash -c "echo ::set-env name=prerelease::$(git describe --tags)"
       - name: Gradle build
         uses: eskatos/gradle-command-action@v1
-          with:
-            arguments: build
+        with:
+          arguments: build
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1.0.0
