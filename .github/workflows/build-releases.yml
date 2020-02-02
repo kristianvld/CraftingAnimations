@@ -15,8 +15,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@master
       - uses: actions/setup-java@v1
-          with:
-            java-version: 11
+        with:
+          java-version: 11
       - uses: eskatos/gradle-command-action@v1
         with:
           arguments: build
