@@ -20,7 +20,7 @@ jobs:
       - name: Checkout code with tags
         run: git fetch --prune --unshallow --tags
       - name: Extract version to env
-        run: bash -c "echo ::set-env name=prerelease::$(git describe --tags)"
+        run: bash -c "echo ::set-env name=version::$(git describe --tags)"
       - name: Gradle build
         uses: eskatos/gradle-command-action@v1
         with:
@@ -31,10 +31,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
+          tag_name: ${{ env.version }}
           release_name: Release ${{ env.version }}
           draft: false
-          prerelease: ${{ !contains(env.version, '-') }}
+          prerelease: ${{ contains(env.version, '-') }}
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1.0.1
