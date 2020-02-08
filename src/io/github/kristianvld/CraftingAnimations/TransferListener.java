@@ -103,6 +103,9 @@ public class TransferListener implements Listener {
                 }
             }
 
+            mergeItems(in);
+            mergeItems(out);
+
             int delay = 0;
             for (ItemStack item : in) {
                 if (item == null || item.getType() == Material.AIR || item.getAmount() == 0) {
@@ -120,6 +123,35 @@ public class TransferListener implements Listener {
             }
 
         }, 0);
+    }
+
+    /**
+     * Tries to reduce array list and merge items
+     */
+    private void mergeItems(List<ItemStack> items) {
+        for (int i = 0; i < items.size(); i++) {
+            ItemStack a = items.get(i);
+            for (int ii = i + 1; ii < items.size(); ii++) {
+                ItemStack b = items.get(ii);
+                if (areSimilar(a, b)) {
+                    items.remove(ii);
+                    ii--;
+                    a = a.clone();
+                    a.setAmount(Math.min(a.getAmount() + b.getAmount(), a.getMaxStackSize()));
+                    items.set(i, a);
+                }
+            }
+        }
+    }
+
+    private boolean areSimilar(ItemStack a, ItemStack b) {
+        a = a.clone();
+        b = b.clone();
+
+        a.setAmount(1);
+        b.setAmount(1);
+
+        return a.equals(b);
     }
 
     private void animate(Location from, Location to, ItemStack item, InventoryType type, boolean reverse, int delay) {
