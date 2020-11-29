@@ -2,6 +2,7 @@ package io.github.kristianvld.CraftingAnimations;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -26,10 +27,13 @@ public class CraftingListener implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        if (event.getClickedInventory() instanceof CraftingInventory && event.getClickedInventory().getType() == InventoryType.WORKBENCH) {
+        if (event.getClickedInventory().getType() == InventoryType.WORKBENCH) {
             if (event.getSlotType() == InventoryType.SlotType.RESULT) {
                 CraftingInventory inv = (CraftingInventory) event.getClickedInventory();
-                animateCrafting(inv.getLocation().getBlock(), inv.getMatrix(), event.getCurrentItem());
+                ItemStack result = event.getCurrentItem();
+                if (result != null && result.getType() != Material.AIR && result.getAmount() > 0) {
+                    animateCrafting(inv.getLocation().getBlock(), inv.getMatrix(), event.getCurrentItem());
+                }
             }
         }
     }
