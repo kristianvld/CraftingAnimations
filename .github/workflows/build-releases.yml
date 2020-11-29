@@ -1,10 +1,7 @@
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+  create:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
 
 name: create compiled, downloadable releases
 
@@ -20,7 +17,7 @@ jobs:
       - name: Checkout code with tags
         run: git fetch --prune --unshallow --tags
       - name: Extract version to env
-        run: bash -c "echo ::set-env name=version::$(git describe --tags)"
+        run: echo "version=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - name: Gradle build
         uses: eskatos/gradle-command-action@v1
         with:
